@@ -98,7 +98,9 @@ fun ScreenContent(modifier: Modifier = Modifier) {
     )
     var selectedOption by remember { mutableStateOf(options[0]) }
     var firstInput by remember { mutableStateOf("") }
+    var firstInputError by remember { mutableStateOf(false) }
     var secondInput by remember { mutableStateOf("") }
+    var secondInputError by remember { mutableStateOf(false) }
     var result by remember { mutableStateOf("") }
 
     val context = LocalContext.current
@@ -169,6 +171,7 @@ fun ScreenContent(modifier: Modifier = Modifier) {
             value = firstInput,
             onValueChange = { firstInput = it },
             label = { Text(firstLabel) },
+            supportingText = {ErrorHint(firstInputError)},
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
             modifier = Modifier.fillMaxWidth(),
         )
@@ -179,6 +182,7 @@ fun ScreenContent(modifier: Modifier = Modifier) {
             value = secondInput,
             onValueChange = { secondInput = it },
             label = { Text(secondLabel) },
+            supportingText = {ErrorHint(secondInputError)},
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
             modifier = Modifier.fillMaxWidth()
         )
@@ -187,6 +191,9 @@ fun ScreenContent(modifier: Modifier = Modifier) {
 
         Button(
             onClick = {
+                firstInputError = (firstInput == "" || firstInput == "0")
+                secondInputError = (secondInput == "" || secondInput == "0")
+                if(firstInputError || secondInputError) return@Button
                 result = calculate(selectedOption, firstInput, secondInput, context)
             },
             modifier = Modifier.padding(top = 8.dp),
@@ -207,6 +214,13 @@ fun ScreenContent(modifier: Modifier = Modifier) {
                 style = MaterialTheme.typography.titleLarge,
             )
         }
+    }
+}
+
+@Composable
+fun ErrorHint(isError: Boolean) {
+    if (isError){
+        Text(text = stringResource(R.string.invalid_input))
     }
 }
 
