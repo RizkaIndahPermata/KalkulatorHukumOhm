@@ -9,4 +9,6 @@
     <string name="enter_current">Enter I value</string>
     <string name="enter_resistance">Enter R value</string>
     <string name="calculate">Calculate</string>
+    <string name="result">Hasil: %1$.2f</string>
+    <string name="invalid_input">Invalid Input</string>
 </resources>

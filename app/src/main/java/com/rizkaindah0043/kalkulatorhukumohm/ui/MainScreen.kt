@@ -1,7 +1,10 @@
 package com.rizkaindah0043.kalkulatorhukumohm.ui
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,9 +13,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -25,7 +30,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -53,6 +60,33 @@ fun MainScreen() {
     }
 }
 
+@SuppressLint("StringFormatMatches")
+fun calculate(selectedOption: String, firstInput: String, secondInput: String, context: Context): String {
+    val firstValue = firstInput.toFloatOrNull()
+    val secondValue = secondInput.toFloatOrNull()
+
+    return if (firstValue != null && secondValue != null) {
+        when (selectedOption) {
+            context.getString(R.string.voltage) -> {
+                val voltage = firstValue * secondValue
+                context.getString(R.string.result, voltage)
+            }
+            context.getString(R.string.current) -> {
+                val current = firstValue / secondValue
+                context.getString(R.string.result, current)
+            }
+            context.getString(R.string.resistance) -> {
+                val resistance = firstValue / secondValue
+                context.getString(R.string.result, resistance)
+            }
+            else -> context.getString(R.string.invalid_input)
+        }
+    } else {
+        context.getString(R.string.invalid_input)
+    }
+}
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScreenContent(modifier: Modifier = Modifier) {
@@ -65,9 +99,13 @@ fun ScreenContent(modifier: Modifier = Modifier) {
     var selectedOption by remember { mutableStateOf(options[0]) }
     var firstInput by remember { mutableStateOf("") }
     var secondInput by remember { mutableStateOf("") }
+    var result by remember { mutableStateOf("") }
+
+    val context = LocalContext.current
 
     Column(
-        modifier = modifier.fillMaxSize().padding(16.dp)
+        modifier = modifier.fillMaxSize().padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             text = stringResource(id = R.string.Ohm_intro),
@@ -119,11 +157,11 @@ fun ScreenContent(modifier: Modifier = Modifier) {
 
         val (firstLabel, secondLabel) = when (selectedOption) {
             stringResource(id = R.string.voltage) ->
-                stringResource(id = R.string.current) to stringResource(id = R.string.resistance)
+                stringResource(id = R.string.enter_current) to stringResource(id = R.string.enter_resistance)
             stringResource(id = R.string.current) ->
-                stringResource(id = R.string.voltage) to stringResource(id = R.string.resistance)
+                stringResource(id = R.string.enter_voltage) to stringResource(id = R.string.enter_resistance)
             stringResource(id = R.string.resistance) ->
-                stringResource(id = R.string.voltage) to stringResource(id = R.string.current)
+                stringResource(id = R.string.enter_voltage) to stringResource(id = R.string.enter_current)
             else -> "" to ""
         }
 
@@ -144,9 +182,34 @@ fun ScreenContent(modifier: Modifier = Modifier) {
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
             modifier = Modifier.fillMaxWidth()
         )
+
         Spacer(modifier = Modifier.height(16.dp))
+
+        Button(
+            onClick = {
+                result = calculate(selectedOption, firstInput, secondInput, context)
+            },
+            modifier = Modifier.padding(top = 8.dp),
+            contentPadding = PaddingValues(horizontal = 32.dp, vertical = 16.dp)
+        ) {
+            Text(text = stringResource(id = R.string.calculate))
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        if (result.isNotEmpty()) {
+            HorizontalDivider(
+                modifier = Modifier.padding(vertical = 8.dp),
+                thickness = 1.dp
+            )
+            Text(
+                text = result,
+                style = MaterialTheme.typography.titleLarge,
+            )
+        }
     }
 }
+
 
 
 @Preview(showBackground = true)
