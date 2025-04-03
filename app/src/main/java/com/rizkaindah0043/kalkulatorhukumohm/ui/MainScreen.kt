@@ -58,9 +58,9 @@ fun MainScreen() {
 fun ScreenContent(modifier: Modifier = Modifier) {
     var expanded by remember { mutableStateOf(false) }
     val options = listOf(
-        stringResource(id = R.string.V),
-        stringResource(id = R.string.I),
-        stringResource(id = R.string.R)
+        stringResource(id = R.string.voltage),
+        stringResource(id = R.string.current),
+        stringResource(id = R.string.resistance)
     )
     var selectedOption by remember { mutableStateOf(options[0]) }
     var firstInput by remember { mutableStateOf("") }
@@ -88,11 +88,11 @@ fun ScreenContent(modifier: Modifier = Modifier) {
                 modifier = Modifier
                     .menuAnchor()
                     .fillMaxWidth(),
-                label = { Text(stringResource(id = R.string.pilih_variabel)) },
+                label = { Text(stringResource(id = R.string.choose_variable)) },
                 trailingIcon = {
                     Icon(
                         imageVector = Icons.Default.ArrowDropDown,
-                        contentDescription = stringResource(id = R.string.pilih_variabel)
+                        contentDescription = stringResource(id = R.string.choose_variable)
                     )
                 }
             )
@@ -118,12 +118,12 @@ fun ScreenContent(modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.height(16.dp))
 
         val (firstLabel, secondLabel) = when (selectedOption) {
-            stringResource(id = R.string.V) ->
-                stringResource(id = R.string.arus) to stringResource(id = R.string.hambatan)
-            stringResource(id = R.string.I) ->
-                stringResource(id = R.string.tegangan) to stringResource(id = R.string.hambatan)
-            stringResource(id = R.string.R) ->
-                stringResource(id = R.string.tegangan) to stringResource(id = R.string.arus)
+            stringResource(id = R.string.voltage) ->
+                stringResource(id = R.string.current) to stringResource(id = R.string.resistance)
+            stringResource(id = R.string.current) ->
+                stringResource(id = R.string.voltage) to stringResource(id = R.string.resistance)
+            stringResource(id = R.string.resistance) ->
+                stringResource(id = R.string.voltage) to stringResource(id = R.string.current)
             else -> "" to ""
         }
 
@@ -132,7 +132,7 @@ fun ScreenContent(modifier: Modifier = Modifier) {
             onValueChange = { firstInput = it },
             label = { Text(firstLabel) },
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -144,6 +144,7 @@ fun ScreenContent(modifier: Modifier = Modifier) {
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
             modifier = Modifier.fillMaxWidth()
         )
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }
 

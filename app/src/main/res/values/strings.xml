@@ -1,11 +1,12 @@
 <resources>
     <string name="app_name">Kalkulator Hukum Ohm</string>
-    <string name="Ohm_intro">Menghitung Tegangan, Arus, dan Hambatan sebuah rangkaian menggunakan rumus Hukum Ohm</string>
-    <string name="pilih_variabel">Pilih Variabel</string>
-    <string name="V">Tegangan (V)</string>
-    <string name="I">Arus (I)</string>
-    <string name="R">Hambatan (R)</string>
-    <string name="tegangan">Masukkan nilai V</string>
-    <string name="arus">Masukkan nilai I</string>
-    <string name="hambatan">Masukkan nilai R</string>
+    <string name="Ohm_intro">Calculate Voltage, Current, and Resistance of a circuit using Ohm\'s Law formula</string>
+    <string name="choose_variable">Select Variable</string>
+    <string name="voltage">Voltage (V)</string>
+    <string name="current">Current (I)</string>
+    <string name="resistance">Resistance (R)</string>
+    <string name="enter_voltage">Enter V value</string>
+    <string name="enter_current">Enter I value</string>
+    <string name="enter_resistance">Enter R value</string>
+    <string name="calculate">Calculate</string>
 </resources>
