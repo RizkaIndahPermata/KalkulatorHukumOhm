@@ -199,9 +199,10 @@ fun ScreenContent(modifier: Modifier = Modifier) {
 
         Button(
             onClick = {
-                firstInputError = (firstInput == "" || firstInput == "0")
-                secondInputError = (secondInput == "" || secondInput == "0")
-                if(firstInputError || secondInputError) return@Button
+                firstInputError = firstInput.isBlank()
+                secondInputError = secondInput.isBlank()
+                if (firstInputError || secondInputError) return@Button
+
                 result = calculate(selectedOption, firstInput, secondInput, context)
             },
             modifier = Modifier.padding(top = 8.dp),
@@ -217,8 +218,15 @@ fun ScreenContent(modifier: Modifier = Modifier) {
                 modifier = Modifier.padding(vertical = 8.dp),
                 thickness = 1.dp
             )
+            val unit = when (selectedOption) {
+                stringResource(R.string.voltage) -> "V"
+                stringResource(R.string.current) -> "A"
+                stringResource(R.string.resistance) -> "Ω"
+                else -> ""
+            }
+
             Text(
-                text = result,
+                text = "$result $unit",
                 style = MaterialTheme.typography.titleLarge,
             )
         }
@@ -235,15 +243,12 @@ fun getUnitFromLabel(label: String): String {
     }
 }
 
-
 @Composable
 fun ErrorHint(isError: Boolean) {
     if (isError){
         Text(text = stringResource(R.string.invalid_input))
     }
 }
-
-
 
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
