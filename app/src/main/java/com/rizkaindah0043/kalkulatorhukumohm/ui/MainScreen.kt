@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -175,8 +176,9 @@ fun ScreenContent(modifier: Modifier = Modifier) {
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
             trailingIcon = {
                 val unit = getUnitFromLabel(firstLabel)
-                if (unit.isNotEmpty()) Text(unit)
+                IconPicker(isError = firstInputError, unit = unit)
             },
+            isError = firstInputError,
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -190,8 +192,9 @@ fun ScreenContent(modifier: Modifier = Modifier) {
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
             trailingIcon = {
                 val unit = getUnitFromLabel(secondLabel)
-                if (unit.isNotEmpty()) Text(unit)
+                IconPicker(isError = secondInputError, unit = unit)
             },
+            isError = secondInputError,
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -244,9 +247,18 @@ fun getUnitFromLabel(label: String): String {
 }
 
 @Composable
+fun IconPicker(isError: Boolean, unit: String){
+    if (isError){
+        Icon(imageVector = Icons.Filled.Warning, contentDescription = stringResource(R.string.invalid_input), tint = MaterialTheme.colorScheme.error)
+    } else {
+        Text(text = unit)
+    }
+}
+
+@Composable
 fun ErrorHint(isError: Boolean) {
     if (isError){
-        Text(text = stringResource(R.string.invalid_input))
+        Text(text = stringResource(R.string.invalid_input), color = MaterialTheme.colorScheme.error)
     }
 }
 
