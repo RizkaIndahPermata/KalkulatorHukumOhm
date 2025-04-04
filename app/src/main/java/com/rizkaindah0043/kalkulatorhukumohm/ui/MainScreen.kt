@@ -2,6 +2,7 @@ package com.rizkaindah0043.kalkulatorhukumohm.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -65,7 +66,7 @@ fun MainScreen(navController: NavHostController) {
                     }) {
                         Icon(
                             imageVector = Icons.Outlined.Info,
-                            contentDescription = stringResource(R.string.about_aplication),
+                            contentDescription = stringResource(R.string.about_application),
                             tint = MaterialTheme.colorScheme.primary
                         )
                     }
@@ -104,6 +105,7 @@ fun calculate(selectedOption: String, firstInput: String, secondInput: String, c
 }
 
 
+@SuppressLint("StringFormatMatches")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScreenContent(modifier: Modifier = Modifier) {
@@ -248,6 +250,25 @@ fun ScreenContent(modifier: Modifier = Modifier) {
                 text = "$result $unit",
                 style = MaterialTheme.typography.titleLarge,
             )
+            Button(onClick = {
+                val numericResult = result.filter { it.isDigit() || it == ',' || it == '.' }
+                    .replace(',', '.')
+                    .toFloatOrNull() ?: 0f
+                val unitResult = when (selectedOption) {
+                    context.getString(R.string.voltage) -> "V"
+                    context.getString(R.string.current) -> "A"
+                    context.getString(R.string.resistance) -> "Ω"
+                    else -> ""
+                }
+                val formattedResult = context.getString(R.string.share_template, numericResult) + " $unitResult"
+
+                shareData(context, formattedResult)
+            },
+                modifier = Modifier.padding(top = 25.dp),
+                contentPadding = PaddingValues(horizontal = 32.dp, vertical = 16.dp)
+            ) {
+                Text(text = stringResource(R.string.share))
+            }
         }
     }
 }
@@ -275,6 +296,16 @@ fun IconPicker(isError: Boolean, unit: String){
 fun ErrorHint(isError: Boolean) {
     if (isError){
         Text(text = stringResource(R.string.invalid_input), color = MaterialTheme.colorScheme.error)
+    }
+}
+
+private fun shareData(context: Context, message: String){
+    val shareIntent = Intent(Intent.ACTION_SEND).apply {
+        type = "text/plain"
+        putExtra(Intent.EXTRA_TEXT, message)
+    }
+    if (shareIntent.resolveActivity(context.packageManager) != null) {
+        context.startActivity(shareIntent)
     }
 }
 
