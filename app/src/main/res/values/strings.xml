@@ -11,6 +11,7 @@
     <string name="calculate">Calculate</string>
     <string name="result">Result: %1$.2f</string>
     <string name="invalid_input">Invalid Input!!!</string>
+    <string name="back">Back</string>
     <string name="about_aplication">About Application</string>
     <string name="copyright">Kalkulator Hukum Ohm is an Android application designed to help users calculate the relationship between voltage, current, and resistance based on Ohm\'s Law.\n\nThis application was developed for the Mobile Programming 1 course assessment.\n\nCopyright © 2024–2025 Rizka Indah Permata.\nAll rights reserved.</string>
 </resources>
