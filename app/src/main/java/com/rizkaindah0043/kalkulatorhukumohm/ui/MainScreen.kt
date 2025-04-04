@@ -31,7 +31,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -107,18 +107,18 @@ fun calculate(selectedOption: String, firstInput: String, secondInput: String, c
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScreenContent(modifier: Modifier = Modifier) {
-    var expanded by remember { mutableStateOf(false) }
+    var expanded by rememberSaveable { mutableStateOf(false) }
     val options = listOf(
         stringResource(id = R.string.voltage),
         stringResource(id = R.string.current),
         stringResource(id = R.string.resistance)
     )
-    var selectedOption by remember { mutableStateOf(options[0]) }
-    var firstInput by remember { mutableStateOf("") }
-    var firstInputError by remember { mutableStateOf(false) }
-    var secondInput by remember { mutableStateOf("") }
-    var secondInputError by remember { mutableStateOf(false) }
-    var result by remember { mutableStateOf("") }
+    var selectedOption by rememberSaveable { mutableStateOf(options[0]) }
+    var firstInput by rememberSaveable { mutableStateOf("") }
+    var firstInputError by rememberSaveable { mutableStateOf(false) }
+    var secondInput by rememberSaveable { mutableStateOf("") }
+    var secondInputError by rememberSaveable { mutableStateOf(false) }
+    var result by rememberSaveable { mutableStateOf("") }
 
     val context = LocalContext.current
 
