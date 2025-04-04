@@ -171,9 +171,13 @@ fun ScreenContent(modifier: Modifier = Modifier) {
             value = firstInput,
             onValueChange = { firstInput = it },
             label = { Text(firstLabel) },
-            supportingText = {ErrorHint(firstInputError)},
+            supportingText = { ErrorHint(firstInputError) },
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-            modifier = Modifier.fillMaxWidth(),
+            trailingIcon = {
+                val unit = getUnitFromLabel(firstLabel)
+                if (unit.isNotEmpty()) Text(unit)
+            },
+            modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -182,8 +186,12 @@ fun ScreenContent(modifier: Modifier = Modifier) {
             value = secondInput,
             onValueChange = { secondInput = it },
             label = { Text(secondLabel) },
-            supportingText = {ErrorHint(secondInputError)},
+            supportingText = { ErrorHint(secondInputError) },
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+            trailingIcon = {
+                val unit = getUnitFromLabel(secondLabel)
+                if (unit.isNotEmpty()) Text(unit)
+            },
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -216,6 +224,17 @@ fun ScreenContent(modifier: Modifier = Modifier) {
         }
     }
 }
+
+@Composable
+fun getUnitFromLabel(label: String): String {
+    return when (label) {
+        stringResource(R.string.enter_voltage) -> "V"
+        stringResource(R.string.enter_current) -> "A"
+        stringResource(R.string.enter_resistance) -> "Ω"
+        else -> ""
+    }
+}
+
 
 @Composable
 fun ErrorHint(isError: Boolean) {

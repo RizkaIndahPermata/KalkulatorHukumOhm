@@ -2,9 +2,9 @@
     <string name="app_name">Kalkulator Hukum Ohm</string>
     <string name="Ohm_intro">Calculate Voltage, Current, and Resistance of a circuit using Ohm\'s Law formula</string>
     <string name="choose_variable">Select Variable</string>
-    <string name="voltage">Voltage (V)-V</string>
-    <string name="current">Current (I)-A</string>
-    <string name="resistance">Resistance (R)-Ω</string>
+    <string name="voltage">Voltage (V)</string>
+    <string name="current">Current (I)</string>
+    <string name="resistance">Resistance (R)</string>
     <string name="enter_voltage">Enter V value</string>
     <string name="enter_current">Enter I value</string>
     <string name="enter_resistance">Enter R value</string>
