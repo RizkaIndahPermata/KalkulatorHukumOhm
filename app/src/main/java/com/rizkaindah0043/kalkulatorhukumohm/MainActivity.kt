@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.rizkaindah0043.kalkulatorhukumohm.ui.MainScreen
+import com.rizkaindah0043.kalkulatorhukumohm.navigation.SetupNavGraph
 import com.rizkaindah0043.kalkulatorhukumohm.ui.theme.KalkulatorHukumOhmTheme
 
 class MainActivity : ComponentActivity() {
@@ -13,7 +13,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             KalkulatorHukumOhmTheme {
-                MainScreen()
+                SetupNavGraph()
             }
         }
     }
