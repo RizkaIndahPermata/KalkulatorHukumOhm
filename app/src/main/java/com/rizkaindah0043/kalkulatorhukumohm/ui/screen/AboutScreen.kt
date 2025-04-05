@@ -37,7 +37,7 @@ fun AboutScreen(navController: NavHostController) {
                     }
                 },
                 title = {
-                    Text(text = stringResource(id = R.string.about_aplication))
+                    Text(text = stringResource(id = R.string.about_application))
                 },
                 colors = TopAppBarDefaults.mediumTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
