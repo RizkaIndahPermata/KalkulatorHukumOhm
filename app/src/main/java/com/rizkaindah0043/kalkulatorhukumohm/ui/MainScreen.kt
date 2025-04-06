@@ -105,7 +105,7 @@ fun calculate(selectedOption: String, firstInput: String, secondInput: String, c
 }
 
 
-@SuppressLint("StringFormatMatches")
+@SuppressLint("StringFormatMatches", "MutableCollectionMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScreenContent(modifier: Modifier = Modifier) {
@@ -116,11 +116,25 @@ fun ScreenContent(modifier: Modifier = Modifier) {
         stringResource(id = R.string.resistance)
     )
     var selectedOption by rememberSaveable { mutableStateOf(options[0]) }
-    var firstInput by rememberSaveable { mutableStateOf("") }
+
+    val inputStates = rememberSaveable {
+        mutableStateOf(
+            mutableMapOf<String, Triple<String, String, String>>()
+        )
+    }
+
+    var firstInput by rememberSaveable(selectedOption) {
+        mutableStateOf(inputStates.value[selectedOption]?.first ?: "")
+    }
+    var secondInput by rememberSaveable(selectedOption) {
+        mutableStateOf(inputStates.value[selectedOption]?.second ?: "")
+    }
+    var result by rememberSaveable(selectedOption) {
+        mutableStateOf(inputStates.value[selectedOption]?.third ?: "")
+    }
+
     var firstInputError by rememberSaveable { mutableStateOf(false) }
-    var secondInput by rememberSaveable { mutableStateOf("") }
     var secondInputError by rememberSaveable { mutableStateOf(false) }
-    var result by rememberSaveable { mutableStateOf("") }
 
     val context = LocalContext.current
 
@@ -144,9 +158,7 @@ fun ScreenContent(modifier: Modifier = Modifier) {
                 value = selectedOption,
                 onValueChange = {},
                 readOnly = true,
-                modifier = Modifier
-                    .menuAnchor()
-                    .fillMaxWidth(),
+                modifier = Modifier.menuAnchor().fillMaxWidth(),
                 label = { Text(stringResource(id = R.string.choose_variable)) },
                 trailingIcon = {
                     Icon(
@@ -164,10 +176,18 @@ fun ScreenContent(modifier: Modifier = Modifier) {
                     DropdownMenuItem(
                         text = { Text(option) },
                         onClick = {
+                            inputStates.value[selectedOption] = Triple(firstInput, secondInput, result)
+
                             selectedOption = option
                             expanded = false
-                            firstInput = ""
-                            secondInput = ""
+
+                            val data = inputStates.value[option] ?: Triple("", "", "")
+                            firstInput = data.first
+                            secondInput = data.second
+                            result = data.third
+
+                            firstInputError = false
+                            secondInputError = false
                         }
                     )
                 }
@@ -225,6 +245,7 @@ fun ScreenContent(modifier: Modifier = Modifier) {
                 if (firstInputError || secondInputError) return@Button
 
                 result = calculate(selectedOption, firstInput, secondInput, context)
+                inputStates.value[selectedOption] = Triple(firstInput, secondInput, result)
             },
             modifier = Modifier.padding(top = 8.dp),
             contentPadding = PaddingValues(horizontal = 32.dp, vertical = 16.dp)
@@ -251,6 +272,7 @@ fun ScreenContent(modifier: Modifier = Modifier) {
                 text = "$result $finalUnit",
                 style = MaterialTheme.typography.titleLarge,
             )
+
             Button(onClick = {
                 val numericResult = result.filter { it.isDigit() || it == ',' || it == '.' }
                     .replace(',', '.')
