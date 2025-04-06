@@ -117,21 +117,20 @@ fun ScreenContent(modifier: Modifier = Modifier) {
     )
     var selectedOption by rememberSaveable { mutableStateOf(options[0]) }
 
-    val inputStates = rememberSaveable {
-        mutableStateOf(
-            mutableMapOf<String, Triple<String, String, String>>()
-        )
+    val defaultStates = rememberSaveable {
+        options.associateWith {
+            Triple(
+                mutableStateOf(""),
+                mutableStateOf(""),
+                mutableStateOf("")
+            )
+        }
     }
 
-    var firstInput by rememberSaveable(selectedOption) {
-        mutableStateOf(inputStates.value[selectedOption]?.first ?: "")
-    }
-    var secondInput by rememberSaveable(selectedOption) {
-        mutableStateOf(inputStates.value[selectedOption]?.second ?: "")
-    }
-    var result by rememberSaveable(selectedOption) {
-        mutableStateOf(inputStates.value[selectedOption]?.third ?: "")
-    }
+    val (firstInputState, secondInputState, resultState) = defaultStates[selectedOption]!!
+    val firstInput by firstInputState
+    val secondInput by secondInputState
+    val result by resultState
 
     var firstInputError by rememberSaveable { mutableStateOf(false) }
     var secondInputError by rememberSaveable { mutableStateOf(false) }
@@ -139,7 +138,9 @@ fun ScreenContent(modifier: Modifier = Modifier) {
     val context = LocalContext.current
 
     Column(
-        modifier = modifier.fillMaxSize().padding(16.dp),
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
@@ -158,7 +159,9 @@ fun ScreenContent(modifier: Modifier = Modifier) {
                 value = selectedOption,
                 onValueChange = {},
                 readOnly = true,
-                modifier = Modifier.menuAnchor().fillMaxWidth(),
+                modifier = Modifier
+                    .menuAnchor()
+                    .fillMaxWidth(),
                 label = { Text(stringResource(id = R.string.choose_variable)) },
                 trailingIcon = {
                     Icon(
@@ -176,16 +179,8 @@ fun ScreenContent(modifier: Modifier = Modifier) {
                     DropdownMenuItem(
                         text = { Text(option) },
                         onClick = {
-                            inputStates.value[selectedOption] = Triple(firstInput, secondInput, result)
-
                             selectedOption = option
                             expanded = false
-
-                            val data = inputStates.value[option] ?: Triple("", "", "")
-                            firstInput = data.first
-                            secondInput = data.second
-                            result = data.third
-
                             firstInputError = false
                             secondInputError = false
                         }
@@ -208,7 +203,7 @@ fun ScreenContent(modifier: Modifier = Modifier) {
 
         OutlinedTextField(
             value = firstInput,
-            onValueChange = { firstInput = it },
+            onValueChange = { firstInputState.value = it },
             label = { Text(firstLabel) },
             supportingText = { ErrorHint(firstInputError) },
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
@@ -224,7 +219,7 @@ fun ScreenContent(modifier: Modifier = Modifier) {
 
         OutlinedTextField(
             value = secondInput,
-            onValueChange = { secondInput = it },
+            onValueChange = { secondInputState.value = it },
             label = { Text(secondLabel) },
             supportingText = { ErrorHint(secondInputError) },
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
@@ -244,8 +239,7 @@ fun ScreenContent(modifier: Modifier = Modifier) {
                 secondInputError = secondInput.isBlank()
                 if (firstInputError || secondInputError) return@Button
 
-                result = calculate(selectedOption, firstInput, secondInput, context)
-                inputStates.value[selectedOption] = Triple(firstInput, secondInput, result)
+                resultState.value = calculate(selectedOption, firstInput, secondInput, context)
             },
             modifier = Modifier.padding(top = 8.dp),
             contentPadding = PaddingValues(horizontal = 32.dp, vertical = 16.dp)
@@ -260,12 +254,14 @@ fun ScreenContent(modifier: Modifier = Modifier) {
                 modifier = Modifier.padding(vertical = 8.dp),
                 thickness = 1.dp
             )
+
             val unit = when (selectedOption) {
                 stringResource(R.string.voltage) -> "V"
                 stringResource(R.string.current) -> "A"
                 stringResource(R.string.resistance) -> "Ω"
                 else -> ""
             }
+
             val finalUnit = if (result != context.getString(R.string.invalid_input)) unit else ""
 
             Text(
@@ -273,28 +269,47 @@ fun ScreenContent(modifier: Modifier = Modifier) {
                 style = MaterialTheme.typography.titleLarge,
             )
 
-            Button(onClick = {
-                val numericResult = result.filter { it.isDigit() || it == ',' || it == '.' }
-                    .replace(',', '.')
-                    .toFloatOrNull() ?: 0f
-                val unitResult = when (selectedOption) {
-                    context.getString(R.string.voltage) -> "V"
-                    context.getString(R.string.current) -> "A"
-                    context.getString(R.string.resistance) -> "Ω"
-                    else -> ""
-                }
-                val formattedResult = context.getString(R.string.share_template, numericResult) + " $unitResult"
+            Spacer(modifier = Modifier.height(16.dp))
 
-                shareData(context, formattedResult)
-            },
-                modifier = Modifier.padding(top = 25.dp),
-                contentPadding = PaddingValues(horizontal = 32.dp, vertical = 16.dp)
-            ) {
-                Text(text = stringResource(R.string.share))
+            androidx.compose.foundation.layout.Row {
+                Button(
+                    onClick = {
+                        val numericResult = result.filter { it.isDigit() || it == ',' || it == '.' }
+                            .replace(',', '.')
+                            .toFloatOrNull() ?: 0f
+                        val unitResult = when (selectedOption) {
+                            context.getString(R.string.voltage) -> "V"
+                            context.getString(R.string.current) -> "A"
+                            context.getString(R.string.resistance) -> "Ω"
+                            else -> ""
+                        }
+                        val formattedResult = context.getString(R.string.share_template, numericResult) + " $unitResult"
+                        shareData(context, formattedResult)
+                    },
+                    contentPadding = PaddingValues(horizontal =50.dp, vertical = 16.dp)
+                ) {
+                    Text(text = stringResource(R.string.share))
+                }
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                Button(
+                    onClick = {
+                        firstInputState.value = ""
+                        secondInputState.value = ""
+                        resultState.value = ""
+                        firstInputError = false
+                        secondInputError = false
+                    },
+                    contentPadding = PaddingValues(horizontal = 50.dp, vertical = 16.dp)
+                ) {
+                    Text(text = stringResource(id = R.string.reset))
+                }
             }
         }
     }
 }
+
 
 @Composable
 fun getUnitFromLabel(label: String): String {

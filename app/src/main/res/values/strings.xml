@@ -13,6 +13,7 @@
     <string name="invalid_input">Invalid Input, use (.)</string>
     <string name="cannot_empty">Cannot be empty</string>
     <string name="share">Share</string>
+    <string name="reset">Reset</string>
     <string name="share_template">Result: %1$.2f</string>
     <string name="back">Back</string>
     <string name="about_application">About Application</string>
