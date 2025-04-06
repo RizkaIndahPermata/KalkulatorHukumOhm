@@ -245,9 +245,10 @@ fun ScreenContent(modifier: Modifier = Modifier) {
                 stringResource(R.string.resistance) -> "Ω"
                 else -> ""
             }
+            val finalUnit = if (result != context.getString(R.string.invalid_input)) unit else ""
 
             Text(
-                text = "$result $unit",
+                text = "$result $finalUnit",
                 style = MaterialTheme.typography.titleLarge,
             )
             Button(onClick = {
@@ -286,7 +287,7 @@ fun getUnitFromLabel(label: String): String {
 @Composable
 fun IconPicker(isError: Boolean, unit: String){
     if (isError){
-        Icon(imageVector = Icons.Filled.Warning, contentDescription = stringResource(R.string.invalid_input), tint = MaterialTheme.colorScheme.error)
+        Icon(imageVector = Icons.Filled.Warning, contentDescription = stringResource(R.string.cannot_empty), tint = MaterialTheme.colorScheme.error)
     } else {
         Text(text = unit)
     }
@@ -295,7 +296,7 @@ fun IconPicker(isError: Boolean, unit: String){
 @Composable
 fun ErrorHint(isError: Boolean) {
     if (isError){
-        Text(text = stringResource(R.string.invalid_input), color = MaterialTheme.colorScheme.error)
+        Text(text = stringResource(R.string.cannot_empty), color = MaterialTheme.colorScheme.error)
     }
 }
 

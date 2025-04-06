@@ -10,7 +10,8 @@
     <string name="enter_resistance">Enter R value</string>
     <string name="calculate">Calculate</string>
     <string name="result">Result: %1$.2f</string>
-    <string name="invalid_input">Invalid Input!!!</string>
+    <string name="invalid_input">Invalid Input, use (.)</string>
+    <string name="cannot_empty">Cannot be empty</string>
     <string name="share">Share</string>
     <string name="share_template">Result: %1$.2f</string>
     <string name="back">Back</string>
