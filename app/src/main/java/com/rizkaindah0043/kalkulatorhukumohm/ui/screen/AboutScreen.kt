@@ -3,6 +3,8 @@ package com.rizkaindah0043.kalkulatorhukumohm.ui.screen
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
@@ -22,6 +24,7 @@ import com.rizkaindah0043.kalkulatorhukumohm.ui.theme.KalkulatorHukumOhmTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AboutScreen(navController: NavHostController) {
+    val scrollState = rememberScrollState()
     Scaffold(
         topBar = {
             TopAppBar(
@@ -47,6 +50,7 @@ fun AboutScreen(navController: NavHostController) {
             modifier = Modifier
                 .padding(innerPadding)
                 .padding(16.dp)
+                .verticalScroll(scrollState)
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
